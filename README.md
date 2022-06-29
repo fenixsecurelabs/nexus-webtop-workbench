@@ -14,14 +14,34 @@ Signed images and its digest for verification. (v0.1.0)
 Each of these images have SBOM generated and attached for attestation.
 
 ```bash
+# Make sure the digest signature matches
 pyrrhus/webtop-workbench:amd64-latest
 pyrrhus/webtop-workbench:sha256-a035907f5f36475eb1c567da358eeda4e4d785a0dae3cbe975e973b954ee609d.sig
 
+# You can use COSIGN_EXPERIMENTAL=1
+COSIGN_EXPERIMENTAL=1 cosign download sbom pyrrhus/webtop-workbench:amd64-latest --output-file <NEWFILE>.spdx
+
+# Verify the attestation of the file as well
+COSIGN_EXPERIMENTAL=1 cosign verify-attestation pyrrhus/webtop-workbench:amd64-latest --output-file <NEWFILE>.att
+
+Verification for pyrrhus/webtop-workbench:amd64-latest --
+The following checks were performed on each of these signatures:
+  - The cosign claims were validated
+  - Existence of the claims in the transparency log was verified offline
+  - Any certificates were verified against the Fulcio roots.
+Certificate subject:  pullmana8@gmail.com
+Certificate issuer URL:  https://github.com/login/oauth
+
+# Do the same for ARM64
 pyrrhus/webtop-workbench:arm64-latest
 pyrrhus/webtop-workbench:sha256-74b016dbb581707d21bd1be7e052422e90eb2fe175dbb98ece864e46f43107b5.sig
+
+COSIGN_EXPERIMENTAL=1 cosign download sbom pyrrhus/webtop-workbench:arm64-latest --output-file <NEWFILE>.spdx
+
+COSIGN_EXPERIMENTAL=1 cosign download attestation pyrrhus/webtop-workbench:arm64-latest --output-file <NEWFILE>.att
 ```
 
-Signed images and its digest for verification. (v0.0.1)
+Signed images and its digest for verification. (v0.0.1). Please note don't attempt to check, as this was just for testing purposes.
 
 ```bash
 pyrrhus/webtop-workbench:amd64-latest
