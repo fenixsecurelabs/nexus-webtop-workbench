@@ -1,0 +1,37 @@
+FROM linuxserver/webtop:arm64v8-ubuntu-mate
+
+ARG TERRAFORM_VERSION=1.2.3
+ARG VERSION
+ENV VERSION $VERSION
+ARG BUILD_TIMESTAMP
+ENV BUILD_TIMESTAMP $BUILD_TIMESTAMP
+
+LABEL description="Custom Ubuntu MATE webtop arm for virtualization administration use. Main tool includes Terraform."
+
+VOLUME ["/var/run", "/var/lib/docker/volumes", "/nexus-bucket"]
+
+ARG DEBIAN_FRONTEND=noninteractive
+
+RUN apt-get update -y -qq && \
+    apt-get upgrade -y -qq && \
+    DEBIAN_FRONTEND=noninteractive \
+        apt-get install --assume-yes --no-install-recommends -qq \
+            qemu \
+            qemu-kvm \
+            qemu-utils \
+            libvirt-daemon-system \
+            libvirt-clients \
+            bridge-utils \
+            virt-manager \
+            wget && \
+            apt-get clean && \
+            rm -rf /var/lib/apt/lists/* 2> /dev/null
+
+RUN sudo wget -O terraform-arm64.zip https://releases.hashicorp.com/terraform/${TERRAFORM_VERSION}/terraform_${TERRAFORM_VERSION}_linux_arm64.zip && \
+    sudo unzip terraform-arm64.zip && \
+    rm terraform-arm64.zip 2> /dev/null
+
+RUN sudo mv terraform usr/local/bin && sudo touch /root/.bashrc && \
+    sudo terraform -install-autocomplete
+
+EXPOSE 1000

@@ -1,0 +1,46 @@
+FROM linuxserver/webtop:amd64-ubuntu-mate
+
+ARG TERRAFORM_VERSION=1.2.3
+ARG VERSION
+ENV VERSION $VERSION
+ARG BUILD_TIMESTAMP
+ENV BUILD_TIMESTAMP $BUILD_TIMESTAMP
+
+LABEL description="Custom Ubuntu MATE webtop amd64 for virtualization administration use. Main tool includes Terraform and GitHub Desktop."
+
+VOLUME ["/var/run", "/var/lib/docker/volumes", "/nexus-bucket"]
+
+ARG DEBIAN_FRONTEND=noninteractive
+
+RUN apt-get update -y -qq && \
+    DEBIAN_FRONTEND=noninteractive \
+        apt-get install --assume-yes --no-install-recommends -qq \
+            qemu \
+            qemu-kvm \
+            qemu-utils \
+            libvirt-daemon-system \
+            libvirt-clients \
+            bridge-utils \
+            virt-manager \
+            wget && \
+            apt-get clean && \
+            rm -rf /var/lib/apt/lists/* 2> /dev/null
+
+RUN sudo wget -O terraform-amd64.zip https://releases.hashicorp.com/terraform/${TERRAFORM_VERSION}/terraform_${TERRAFORM_VERSION}_linux_amd64.zip && \
+    sudo unzip terraform-amd64.zip && \
+    rm terraform-amd64.zip 2> /dev/null
+
+RUN sudo mv terraform usr/local/bin && sudo touch /root/.bashrc && \
+    sudo terraform -install-autocomplete
+
+SHELL ["/bin/bash", "-o", "pipefail", "-c"]
+
+RUN wget -qO - https://mirror.mwt.me/ghd/gpgkey | tee /etc/apt/trusted.gpg.d/shiftkey-desktop.asc
+
+RUN echo "deb [arch=amd64] https://mirror.mwt.me/ghd/deb/ any main" > /etc/apt/sources.list.d/packagecloud-shiftkey-desktop.list
+
+RUN sudo apt-get update -y -qq && \
+    sudo apt-get install --assume-yes --no-install-recommends github-desktop -qq && \
+    sudo apt-get upgrade -y -qq
+
+EXPOSE 1000
