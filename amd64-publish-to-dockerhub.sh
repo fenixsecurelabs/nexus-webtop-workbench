@@ -2,7 +2,7 @@
 
 VERSION=$(git rev-parse --short HEAD)
 AMD_VERSIONED_TAG=$(git rev-parse --short v0.1.0^{commit})-amd64
-REPO="pyrrhus/webtop-workbench:"
+REPO="phoenixvlabs/nexus-webtop-workbench:"
 AMD_TAG="$REPO$AMD_VERSIONED_TAG"
 AMD_LATEST="${REPO}amd64-latest"
 BUILD_TIMESTAMP=$( date '+%F_%H:%M:%S' )
