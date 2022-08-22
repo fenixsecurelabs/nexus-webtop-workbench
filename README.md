@@ -1,13 +1,13 @@
 ## Underground Nexus - Linux Webtop Ubuntu MATE - Workbench
-> Current Version v0.1.0
+> Current Version v0.2.0
 
 Latest images
 
-`docker pull pyrrhus/webtop-workbench:amd64-latest`
+`docker pull phoenixvlabs/nexus-webtop-workbench:amd64-latest`
 
 or
 
-`docker pull pyrrhus/webtop-workbench:arm64-latest`
+`docker pull phoenixvlabs/nexus-webtop-workbench:arm64-latest`
 
 Signed images and its digest for verification. (v0.1.0)
 
